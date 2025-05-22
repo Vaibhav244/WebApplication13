@@ -4,6 +4,8 @@ using WebApplication13.Repositories.Implementations;
 using WebApplication13.Repositories.Interfaces;
 using WebApplication13.Services.Implementations;
 using WebApplication13.Services.Interfaces;
+using YourCompany.ResourceManagement.Repositories;
+using YourCompany.ResourceManagement.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,11 +19,13 @@ builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializ
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 builder.Services.AddScoped<IAttendanceRepository, AttendanceRepository>();
 builder.Services.AddScoped<IMailLogRepository, MailLogRepository>();
+builder.Services.AddScoped<IOnsiteEmployeeRepository, OnsiteEmployeeRepository>();
 
 // Register services
 builder.Services.AddScoped<IWFOReportService, WFOReportService>();
 builder.Services.AddScoped<IWFHReportService, WFHReportService>();
 builder.Services.AddScoped<IMailLogService, MailLogService>();
+builder.Services.AddScoped<IOnsiteEmployeeService, OnsiteEmployeeService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
