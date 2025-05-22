@@ -6,9 +6,10 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
-using YourCompany.ResourceManagement.Models;
+using WebApplication13.Models.DTOs;
+using WebApplication13.Repositories.Interfaces;
 
-namespace YourCompany.ResourceManagement.Repositories
+namespace WebApplication13.Repositories.Implementations
 {
     public class OnsiteEmployeeRepository : IOnsiteEmployeeRepository
     {
@@ -26,22 +27,18 @@ namespace YourCompany.ResourceManagement.Repositories
         {
             try
             {
-                // Format dates as strings in Oracle's preferred format
                 string formattedStartDate = startDate.ToString("yyyy-MM-dd");
                 string formattedEndDate = endDate.ToString("yyyy-MM-dd");
 
                 _logger.LogInformation("Querying for employee {EmpId} from {StartDate} to {EndDate}",
                     empId, formattedStartDate, formattedEndDate);
 
-                // 1. Determine employee's access level first
                 int accessLevel = await DetermineAccessLevelAsync(empId);
 
                 _logger.LogInformation("User {EmpId} access level determined as {Level}", empId, accessLevel);
 
-                // 2. Build hierarchy filter based on access level
                 string hierarchyFilter = BuildHierarchyFilter(accessLevel, empId);
 
-                // 3. Execute query with both access control and date filtering
                 return await ExecuteOnsiteEmployeeQuery(hierarchyFilter, formattedStartDate, formattedEndDate, empId);
             }
             catch (Exception ex)

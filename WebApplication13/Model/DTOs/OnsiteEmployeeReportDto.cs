@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace YourCompany.ResourceManagement.Models
+namespace WebApplication13.Models.DTOs
 {
     public class OnsiteEmployeeReportDto
     {

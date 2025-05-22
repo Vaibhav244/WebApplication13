@@ -4,8 +4,6 @@ using WebApplication13.Repositories.Implementations;
 using WebApplication13.Repositories.Interfaces;
 using WebApplication13.Services.Implementations;
 using WebApplication13.Services.Interfaces;
-using YourCompany.ResourceManagement.Repositories;
-using YourCompany.ResourceManagement.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 

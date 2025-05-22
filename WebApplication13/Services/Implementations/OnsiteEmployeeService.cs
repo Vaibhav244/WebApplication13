@@ -2,10 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using YourCompany.ResourceManagement.Models;
-using YourCompany.ResourceManagement.Repositories;
+using WebApplication13.Models.DTOs;
+using WebApplication13.Repositories.Interfaces;
+using WebApplication13.Services.Interfaces;
 
-namespace YourCompany.ResourceManagement.Services
+namespace WebApplication13.Services.Implementations
 {
     public class OnsiteEmployeeService : IOnsiteEmployeeService
     {

@@ -1,15 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Globalization;
-using System.Threading.Tasks;
-using System.IO;
 using System.Data;
-using YourCompany.ResourceManagement.Services;
-using YourCompany.ResourceManagement.Models;
-using WebApplication13.Context; // Ensure this namespace is correct for your project
+using System.Globalization;
+using System.IO;
+using System.Threading.Tasks;
+using WebApplication13.Context;
+using WebApplication13.Models.DTOs;
+using WebApplication13.Services.Interfaces;
 
-namespace YourCompany.ResourceManagement.Controllers
+namespace WebApplication13.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
@@ -22,7 +23,7 @@ namespace YourCompany.ResourceManagement.Controllers
         public OnsiteEmployeeController(
             IOnsiteEmployeeService onsiteEmployeeService,
             ILogger<OnsiteEmployeeController> logger,
-            Microsoft.AspNetCore.Hosting.IWebHostEnvironment environment)
+            IWebHostEnvironment environment)
         {
             _onsiteEmployeeService = onsiteEmployeeService;
             _logger = logger;
@@ -52,12 +53,10 @@ namespace YourCompany.ResourceManagement.Controllers
                     return BadRequest("Invalid employee ID");
                 }
 
-                // Log request information including current user
-                string currentUser = User.Identity?.Name ?? "Anonymous";
+                // Log request information
                 _logger.LogInformation(
-                    "Request received at {Timestamp} by {User} - Getting onsite employees for EmpId: {EmpId}",
+                    "Request received at {Timestamp} - Getting onsite employees for EmpId: {EmpId}",
                     DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"),
-                    currentUser,
                     empId);
 
                 var result = await _onsiteEmployeeService.GetOnsiteEmployeesAsync(
@@ -68,7 +67,7 @@ namespace YourCompany.ResourceManagement.Controllers
             catch (FormatException ex)
             {
                 _logger.LogError(ex, "Invalid date format");
-                return BadRequest($"Invalid date format. Please use dd/mm/yyyy format (e.g., 01/01/2024). Error: {ex.Message}");
+                return BadRequest($"Invalid date format. Please use dd/MM/yyyy format (e.g., 01/01/2024)");
             }
             catch (Exception ex)
             {
@@ -95,19 +94,19 @@ namespace YourCompany.ResourceManagement.Controllers
                     return BadRequest("Invalid employee ID");
                 }
 
-                // Get data using same service method as the regular endpoint
-                var data = await _onsiteEmployeeService.GetOnsiteEmployeesAsync(
-                    effectiveStartDate, effectiveEndDate, empId);
-
-                // Hardcoded values for the report metadata (as requested)
+                // Updated timestamp and user from your latest info
                 string currentUser = "CoderVaibhav24";
-                string timestamp = "2025-05-22 00:42:16";
+                string timestamp = "2025-05-22 07:34:59";
 
                 _logger.LogInformation(
                     "Excel download request at {Timestamp} by {User} for EmpId: {EmpId}",
                     timestamp,
                     currentUser,
                     empId);
+
+                // Get data using service
+                var data = await _onsiteEmployeeService.GetOnsiteEmployeesAsync(
+                    effectiveStartDate, effectiveEndDate, empId);
 
                 // Convert to DataTable
                 DataTable dataTable = new DataTable("Onsite Employees");
@@ -154,7 +153,7 @@ namespace YourCompany.ResourceManagement.Controllers
                 string fileName = $"{fileNameWithoutExtension}.xlsx";
                 string filePath = Path.Combine(_tempFilePath, fileName);
 
-                // Use your existing ExcelHelper to create the Excel file
+                // Use ExcelHelper to create the Excel file
                 ExcelHelper.CreateExcelFromDataTable(dataTable, filePath);
 
                 // Return file and schedule it for deletion after response is sent
@@ -173,7 +172,7 @@ namespace YourCompany.ResourceManagement.Controllers
             catch (FormatException ex)
             {
                 _logger.LogError(ex, "Invalid date format");
-                return BadRequest($"Invalid date format. Please use dd/mm/yyyy format (e.g., 01/01/2024)");
+                return BadRequest($"Invalid date format. Please use dd/MM/yyyy format (e.g., 01/01/2024)");
             }
             catch (Exception ex)
             {

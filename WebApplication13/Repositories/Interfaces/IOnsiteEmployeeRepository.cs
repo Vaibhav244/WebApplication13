@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using YourCompany.ResourceManagement.Models;
+using WebApplication13.Models.DTOs;
 
-namespace YourCompany.ResourceManagement.Repositories
+namespace WebApplication13.Repositories.Interfaces
 {
     public interface IOnsiteEmployeeRepository
     {
